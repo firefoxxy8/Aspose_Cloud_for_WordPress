@@ -39,6 +39,11 @@ Aspose DOC Importer Plugin for WordPress facilitates WordPress users to parse DO
 <td>Aspose Importer & Exporter Plugin for WordPress facilitates WordPress users to parse PDF , DOC & DOCX document contents without requiring any other software such as Adobe Acrobat, PDF reader or Microsoft Words. It also export posts / pages and custom post types contents into doc, pdf files. The plugin uses Aspose.Words & Aspose.Pdf Cloud APIs to perform the core functionality without depending upon any other engine except API itself.</td>
 </tr>
 
+<tr>
+<td><a href="#" target="_new">Aspose Cloud Presentation Importer</a></td>
+<td>Aspose Cloud Presentation Importer Plugin for WordPress allows developers to get/read contents of Microsoft PowerPoint (PPT) document without requiring Microsoft Office. This module demonstrates very powerful Import feature provided by Aspose.Slides . It adds a simple button above Editor in WordPress and asks for the PPT file to be imported into the editor. Once the PPT file is provided, users get the document contents displayed on the editor immediately.</td>
+</tr>
+
 
 </table>
 
