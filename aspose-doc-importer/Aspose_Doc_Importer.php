@@ -3,7 +3,7 @@
 Plugin Name: Aspose Doc Importer
 Plugin URI:
 Description: Aspose Doc Importer is a plugin for reading content from the Doc file and then inserting it in the editor.
-Version: 1.0
+Version: 2.0
 Author: Fahad Adeel
 Author URI: http://cloud.aspose.com/
 

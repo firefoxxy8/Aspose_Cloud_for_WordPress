@@ -9,6 +9,7 @@ use Aspose\Cloud\Common\AsposeApp;
 use Aspose\Cloud\Common\Product;
 use Aspose\Cloud\Storage\Folder;
 use Aspose\Cloud\Words\Extractor;
+use Aspose\Cloud\Words\Converter as WordsConverter;
 
 
 function my_autoloader($class) {
@@ -39,28 +40,50 @@ $filename = $_REQUEST['filename'];
 $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
 if($ext == 'doc' || $ext == 'docx') {
+
     $uploadpath = $_REQUEST['uploadpath'];
+    $uploadURI = $_REQUEST['uploadURI'];
     $uploadpath = str_replace('/','\\',$uploadpath);
     $uploadpath = $uploadpath . '\\';
+    $pass_upload_path = $uploadpath;
+
 
     AsposeApp::$outPutLocation = $uploadpath; // 'F:\\xampp\htdocs\\wordpress\\uploads\\';
 
     if(!isset($_REQUEST['aspose'])) {
 
         $folder = new Folder();
+		$uploadpath = str_replace("\\","/",$uploadpath);
         $uploadFile = $uploadpath .  $filename; // 'F:\\xampp\htdocs\\wordpress\\uploads\\License.pdf';
         $folder->uploadFile($uploadFile, '');
     }
 
-    $filename = trim($filename);
-    $func = new Extractor($filename);
 
-    $output_arr = $func->getText();
-    $content = '';
-    foreach($output_arr as $output){
-        $content .= '<p>' . $output->Text . '</p>';
-    }
+    $converter = new WordsConverter($filename);
+	$converter->saveFormat = 'html';
+	$content = $converter->convert();
+
+    $callback = function($match) use ($pass_upload_path,$uploadURI){
+
+
+        $img_src = $match[2];
+        $ext = $match[1];
+
+        $data = base64_decode($img_src);
+
+        $file_name = uniqid().'_img.'.$ext;
+        $pass_upload_path = str_replace("\\","/",$pass_upload_path);
+        $file = $pass_upload_path . $file_name;
+
+
+        file_put_contents($file, $data);
+        return 'src="' . $uploadURI . '/' . $file_name . '"';
+
+    };
+
+    $content = preg_replace_callback('/src="data:image\/([^;]+);base64,([^"]+)"/i',$callback,$content);
     echo $content;
+	
 } else {
     echo "Wrong File was selected!";
 }

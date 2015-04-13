@@ -4,8 +4,8 @@ jQuery(document).ready(function($){
     ({
         type : "post",
         dataType : "html",
-        url : AsposeParams['aspose_files_url'],
-        data : {appSID: AsposeParams['appSID'], appKey : AsposeParams['appKey']},
+        url : AsposeDocParams['aspose_files_url'],
+        data : {appSID: AsposeDocParams['appSID'], appKey : AsposeDocParams['appKey']},
         success: function(response) {
             $('#aspose_cloud_doc').append(response);
 
@@ -19,8 +19,8 @@ jQuery(document).ready(function($){
             ({
                 type : "post",
                 dataType : "html",
-                url : AsposeParams['aspose_files_url'],
-                data : {appSID: AsposeParams['appSID'], appKey : AsposeParams['appKey'], aspose_folder : selected_folder_name},
+                url : AsposeDocParams['aspose_files_url'],
+                data : {appSID: AsposeDocParams['appSID'], appKey : AsposeDocParams['appKey'], aspose_folder : selected_folder_name},
                 success: function(response) {
                     $('#aspose_cloud_doc').html(response);
 
@@ -46,6 +46,7 @@ jQuery(document).ready(function($){
 
 
     $('#insert_doc_content').live('click',function(){
+
         var filename = $('#doc_file_name').val();
         $("#aspose_doc_popup_container").dialog('close');
         $body = $("body");
@@ -55,8 +56,8 @@ jQuery(document).ready(function($){
         ({
             type : "post",
             dataType : "html",
-            url : AsposeParams['insert_doc_url'],
-            data : {appSID: AsposeParams['appSID'], appKey : AsposeParams['appKey'], filename : filename, uploadpath: AsposeParams['uploadpath']},
+            url : AsposeDocParams['insert_doc_url'],
+            data : {appSID: AsposeDocParams['appSID'], appKey : AsposeDocParams['appKey'], filename : filename, uploadpath: AsposeDocParams['uploadpath'] , uploadURI: AsposeDocParams['uploadURI']},
             success: function(response) {
                 $body.removeClass("loading");
 
@@ -75,8 +76,8 @@ jQuery(document).ready(function($){
         ({
             type : "post",
             dataType : "html",
-            url : AsposeParams['insert_doc_url'],
-            data : {appSID: AsposeParams['appSID'], appKey : AsposeParams['appKey'], filename : filename, uploadpath: AsposeParams['uploadpath'] , aspose : '1'},
+            url : AsposeDocParams['insert_doc_url'],
+            data : {appSID: AsposeDocParams['appSID'], appKey : AsposeDocParams['appKey'], filename : filename, uploadpath: AsposeDocParams['uploadpath'] , uploadURI: AsposeDocParams['uploadURI'] , aspose : '1'},
             success: function(response) {
                 $body.removeClass("loading");
                 window.send_to_editor(response);

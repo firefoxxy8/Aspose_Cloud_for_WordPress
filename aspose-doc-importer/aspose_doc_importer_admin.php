@@ -26,12 +26,13 @@ function AsposeDocImporterEnqueueScripts() {
         'appSID'            => get_option('aspose_doc_importer_app_sid'),
         'appKey'            => get_option('aspose_doc_importer_app_key'),
         'uploadpath'        => $upload_path['path'],
+        'uploadURI'         => $upload_path['url'],
         'insert_doc_url'    => plugins_url( 'getAsposeDocContent.php', __FILE__ ),
         'aspose_files_url'    => plugins_url( 'getAsposeFiles.php', __FILE__ ),
 
     );
 
-    wp_localize_script( 'aspose_doc_importer_script', 'AsposeParams', $params );
+    wp_localize_script( 'aspose_doc_importer_script', 'AsposeDocParams', $params );
 
     wp_enqueue_script( 'jquery-ui-dialog' );
     wp_enqueue_script( 'jquery-ui-tabs' );
@@ -215,13 +216,14 @@ function aspose_doc_add_inline_popup_content() {
 <?php
 }
 
-add_filter('upload_mimes', 'aspose_doc_importer_upload_mimes');
+
 
 if (check_upload_aspose_doc_context('Aspose-Doc-Importer-Select-File')) {
 
     add_filter('media_upload_tabs', 'aspose_doc_importer_image_tabs', 10, 1);
     add_filter('attachment_fields_to_edit', 'aspose_doc_importer_action_button', 20, 2);
     add_filter('media_send_to_editor', 'aspose_doc_importer_file_selected', 10, 3);
+    add_filter('upload_mimes', 'aspose_doc_importer_upload_mimes');
 }
 
 function aspose_doc_importer_image_tabs($_default_tabs) {
