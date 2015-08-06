@@ -4,7 +4,7 @@ Contributor's website: http://cloud.aspose.com/
 Tags: wp doc export,wordpress export posts to doc, wp export post content to doc / docx, aspose doc exporter plugin, aspose cloud doc exporter, aspose cloud storage doc exporter, aspose cloud storage words, post to doc, wordpress post to doc / docx
 Requires at least: 2.8
 Tested up to: 3.9
-Stable tag: 1.0
+Stable tag: 3.0
 License: GPLv2 or later
 
 Aspose DOC Exporter exports posts into a word document file doc / docx. Currently this plugin works as a bulk action of post / pages or of any custom post type.
@@ -20,6 +20,9 @@ Aspose Doc Exporter Plugin for WordPress allows administrators to export post co
 3. Upload the directory '/aspose-doc-exporter/' to the '/wp-content/plugins/' directory.
 4. Activate the plugin through the 'Plugins' menu in WordPress.
 5. Click on 'Aspose Doc Exporter' link under Settings menu to access the admin section.
+
+== Plugin Requirements ==
+- This Plugin works only with PHP version >=5.3
 
 
 == Screenshots ==
@@ -40,3 +43,11 @@ No, this plugin is only for exporting posts into doc files. For exporting posts 
 == Changelog ==
 = 1.0 =
 * This is the first version
+
+= 2.0 =
+* * Downloading of the exported file will start immediately after converting from Aspose Cloud.
+
+= 3.0 =
+* * Post Comments can be exported now
+* * Exported File Same Format
+** bug fixes on existing features

@@ -31,7 +31,7 @@ function AsposeDocExporterAdminContent() {
                 <div title="Click to toggle" class="handlediv"><br /></div>
                 <h3 class="hndle"><?php echo __('Support / Manual', 'aspose-doc-exporter'); ?></h3>
                 <div class="inside">
-                    <p style="margin:15px 0px;"><?php echo __('For any suggestion / query / issue / requirement, please feel free to drop an email to', 'aspose-doc-exporter'); ?> <a href="mailto:marketplace@aspose.com?subject=Aspose Doc Exporter">marketplace@aspose.com</a>.</p>
+                    <p style="margin:15px 0px;"><?php echo __('For any suggestion / query / issue / requirement, please feel free to drop an email to', 'aspose-doc-exporter'); ?> <a href="/cdn-cgi/l/email-protection#87eae6f5ece2f3f7ebe6e4e2c7e6f4f7e8f4e2a9e4e8eab8f4f2e5ede2e4f3bac6f4f7e8f4e2a7c3e8e4a7c2fff7e8f5f3e2f5">marketplace@aspose.com</a>.</p>
                     <p style="margin:15px 0px;"><?php echo __('Get the', 'aspose-doc-exporter'); ?> <a href="#" target="_blank"><?php echo __('Manual here', 'aspose-doc-exporter'); ?></a>.</p>
 
                 </div>
@@ -85,6 +85,44 @@ function AsposeDocExporterAdminContent() {
                                 </td>
                             </tr>
 
+                            <tr valign="top">
+                                <th scope="row"><label><?php _e('Export Post Comments', 'aspose-doc-exporter'); ?></label></th>
+
+                                <td>
+                                    <input type="checkbox" name="aspose_doc_exporter_post_comments" id="aspose_doc_exporter_post_comments" value="yes" <?php echo ((get_option('aspose_doc_exporter_post_comments') == 'yes') ? 'checked="checked"' : '') ?> >
+
+                                    <span class="description"><?php _e('Enable if you want to export post comments as well.', 'aspose-doc-exporter');?></span>
+                                </td>
+                            </tr>
+
+                            <tr valign="top">
+                                <th scope="row"><label><?php _e('Label for Comments', 'aspose-doc-exporter'); ?></label></th>
+                                <td>
+                                    <input type="text" size="40" name="aspose_doc_exporter_comments_text" id="aspose_doc_exporter_comments_text" value="<?php echo get_option('aspose_doc_exporter_comments_text'); ?>" />
+
+                                </td>
+                            </tr>
+
+                            <tr valign="top">
+                                <th scope="row"><label><?php _e('Export Posts File Type', 'aspose-doc-exporter'); ?></label></th>
+
+                                <td>
+                                    <select name="aspose_doc_exporter_file_type" id="aspose_doc_exporter_file_type">
+                                        <option value="docx" <?php echo ((get_option('aspose_doc_exporter_file_type') == 'docx') ? 'selected="selected"' : ''); ?>>DOCX</option>
+                                        <option value="doc" <?php echo ((get_option('aspose_doc_exporter_file_type') == 'doc') ? 'selected="selected"' : ''); ?>>DOC</option>
+                                        <option value="odt" <?php echo ((get_option('aspose_doc_exporter_file_type') == 'odt') ? 'selected="selected"' : ''); ?>>ODT</option>
+                                        <option value="dot" <?php echo ((get_option('aspose_doc_exporter_file_type') == 'dot') ? 'selected="selected"' : ''); ?>>DOT</option>
+                                        <option value="dotx" <?php echo ((get_option('aspose_doc_exporter_file_type') == 'dotx') ? 'selected="selected"' : ''); ?>>DOTX</option>
+                                        <option value="rtf" <?php echo ((get_option('aspose_doc_exporter_file_type') == 'rtf') ? 'selected="selected"' : ''); ?>>RTF</option>
+                                        <option value="txt" <?php echo ((get_option('aspose_doc_exporter_file_type') == 'txt') ? 'selected="selected"' : ''); ?>>TXT</option>
+                                    </select>
+
+                                    <span class="description"><?php _e('Select Exported File Format.', 'aspose-doc-exporter');?></span>
+                                </td>
+                            </tr>
+
+
+
 
                             <tr valign="top">
                                 <th scope="row"></th>
@@ -107,8 +145,8 @@ function aspose_doc_exporter_add_export_option() {
     ?>
     <script type="text/javascript">
         jQuery(document).ready(function($) {
-            jQuery('<option>').val('aspose_export_doc').text('<?php echo('Aspose Export To DOC')?>').appendTo("select[name='action']");
-            jQuery('<option>').val('aspose_export_doc').text('<?php echo('Aspose Export To DOC')?>').appendTo("select[name='action2']");
+            jQuery('<option>').val('aspose_export_doc').text('<?php echo('Aspose Export to File')?>').appendTo("select[name='action']");
+            jQuery('<option>').val('aspose_export_doc').text('<?php echo('Aspose Export to File')?>').appendTo("select[name='action2']");
         });
     </script>
 
@@ -150,7 +188,7 @@ function aspose_doc_exporter_bulk_action(){
     if(empty($post_ids)) return;
 
     // this is based on wp-admin/edit.php
-    $sendback = remove_query_arg( array('exported', 'untrashed', 'deleted', 'ids'), wp_get_referer() );
+    $sendback = remove_query_arg( array('exported', 'untrashed', 'deleted', 'ids','file_name'), wp_get_referer() );
 
     if ( ! $sendback )
         $sendback = admin_url( "edit.php?post_type=$post_type" );
@@ -168,14 +206,44 @@ function aspose_doc_exporter_bulk_action(){
 
             if ( is_array($post_contents) && count($post_contents) > 0 ) {
                 $file_name = aspose_doc_exporter_array_to_html($post_contents);
+                
                 include_once('asposeDocConverter.php');
             } else {
                 wp_die( __('Error exporting post.') );
             }
 
+            global $html_filename;
+            $file_type = get_option('aspose_doc_exporter_file_type');
+            if(isset($file_type) && !empty($file_type)){
+                $file_type = $file_type;
+            } else {
+                $file_type = 'docx';
+            }
 
+            $file_name = str_replace('.htm','.'.$file_type,$html_filename);
 
-            $sendback = add_query_arg( array('exported' => $exported, 'ids' => join(',', $post_ids) ), $sendback );
+            $upload_dir = wp_upload_dir();
+            $upload_path = $upload_dir['path'] . '/';
+
+            $file_name = $upload_path . $file_name;
+
+            $file_details = pathinfo($file_name);
+
+            if($file_details['extension'] == $file_type) {
+                header ("Content-type: octet/stream");
+
+                header ("Content-disposition: attachment; filename=".basename($file_name).";");
+
+                header("Content-Length: ".filesize($file_name));
+
+                readfile($file_name);
+                exit;
+
+            } else {
+                echo "Invalid File!";
+            }
+
+            $sendback = add_query_arg( array('exported' => $exported, 'ids' => join(',', $post_ids), 'file_name' => $file_name ), $sendback );
 
             break;
 
@@ -191,25 +259,6 @@ function aspose_doc_exporter_bulk_action(){
     exit();
 }
 
-add_action('admin_notices','aspose_doc_exporter_admin_notices');
-
-function aspose_doc_exporter_admin_notices() {
-
-    $upload_dir = wp_upload_dir();
-    $upload_path = $upload_dir['path'] . '/';
-
-    $file_name = $upload_path . 'output.doc';
-
-    $download_path = plugin_dir_url(__FILE__) . 'aspose_doc_exporter_download.php';
-    global $post_type, $pagenow;
-
-    if($pagenow == 'edit.php' && isset($_REQUEST['exported']) && (int) $_REQUEST['exported']) {
-        $message = sprintf( _n( 'Post exported.', '%s posts exported.', $_REQUEST['exported'] ), number_format_i18n( $_REQUEST['exported'] ) );
-        $message .='<a href="'.$download_path.'?file='.$file_name.'"> Click Here </a> to download the doc file.';
-        echo "<div class=\"updated\"><p>{$message}</p></div>";
-    }
-}
-
 function aspose_doc_exporter_array_builder($post_ids) {
 
     foreach($post_ids as $post_id) {
@@ -218,6 +267,24 @@ function aspose_doc_exporter_array_builder($post_ids) {
 
         $post_title = $post_data->post_title;
         $post_content = apply_filters('the_content',$post_data->post_content) ;
+        //$post_content = $post_data->post_content;
+
+        if(get_option('aspose_doc_exporter_post_comments') == 'yes') {
+
+            if( get_option('aspose_doc_exporter_comments_text') !='' ) {
+                $post_content .= ' <br /> <h3> '. get_option('aspose_doc_exporter_comments_text') .' </h3>';
+            } else {
+                $post_content .= ' <br /> <h3> Comments </h3>';
+            }
+
+            $defaults = array('ID' => $post_id, 'status' => 'approve');
+            $post_comments = get_comments($defaults);
+
+            foreach($post_comments as $comment) :
+                $post_content .= ' <strong>  ' . $comment->comment_author . ' </strong> <br />' . $comment->comment_content . '<br />';
+            endforeach;
+        }
+
 
         $post_contents[$post_title] = $post_content;
     }
@@ -232,24 +299,21 @@ function aspose_doc_exporter_array_builder($post_ids) {
 }
 
 function aspose_doc_exporter_array_to_html($post_contents){
-
+    global $html_filename;
     $upload_dir = wp_upload_dir();
     $upload_path = $upload_dir['path'] . '/';
-    $filename = 'output.html';
+    $html_filename = 'output_'.time().'.htm';
 
     $output_string = <<<EOD
 <!DOCTYPE html>
 <html>
-    <head>
-        <title></title>
-    </head>
-    <body>
+<body> 
 EOD;
 
-    foreach($post_contents as $post_title=>$post_content) {
+    foreach($post_contents as $key => $value) {
         $output_string .= <<<EOD
-        <h1> {$post_title} </h1>
-        <p> {$post_content} </p>
+        <h1> {$key} </h1>
+        <p> {$value} </p>
         <hr />
 EOD;
     }
@@ -259,8 +323,9 @@ EOD;
 </html>
 EOD;
 
-    file_put_contents($upload_path . $filename,$output_string);
+    @unlink($upload_path . $html_filename);    
+    file_put_contents($upload_path . $html_filename,$output_string);
 
-    return $upload_path . $filename;
+    return $upload_path . $html_filename;
 }
 

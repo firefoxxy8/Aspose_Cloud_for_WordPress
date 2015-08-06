@@ -34,7 +34,7 @@ class Converter {
 
         //sign URI
         $signedURI = Utils::sign($strURI);
-
+		
         $responseStream = Utils::processCommand($signedURI, 'GET', '', '');
 
         $v_output = Utils::validateOutput($responseStream);
@@ -56,6 +56,7 @@ class Converter {
     public function convertLocalFile($inputPath, $outputPath, $outputFormat) {
         $str_uri = Product::$baseProductUri . '/words/convert?format=' . $outputFormat;
         $signed_uri = Utils::sign($str_uri);
+		
         $responseStream = Utils::uploadFileBinary($signed_uri, $inputPath, 'xml');
 
         $v_output = Utils::validateOutput($responseStream);

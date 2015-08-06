@@ -3,7 +3,7 @@
 Plugin Name: Aspose Doc Exporter
 Plugin URI:
 Description: Aspose Doc Exporter is a plugin for exporting contents of posts into the doc / docx file.
-Version: 1.0
+Version: 3.0
 Author: Fahad Adeel
 Author URI: http://cloud.aspose.com/
 
@@ -50,6 +50,10 @@ function UnsetOptionsAsposeDocExporter() {
     // Deleting the added options on plugin uninstall
     delete_option('aspose_doc_exporter_app_sid');
     delete_option('aspose_doc_exporter_app_key');
+    delete_option('aspose_doc_exporter_comments_text');
+    delete_option('aspose_doc_exporter_post_comments');
+    delete_option('aspose_doc_exporter_file_type');
+
 
 }
 
@@ -60,6 +64,10 @@ function AsposeDocExporterAdminRegisterSettings() {
 
      register_setting('aspose_doc_exporter_options', 'aspose_doc_exporter_app_sid');
      register_setting('aspose_doc_exporter_options', 'aspose_doc_exporter_app_key');
+     register_setting('aspose_doc_exporter_options', 'aspose_doc_exporter_comments_text');
+     register_setting('aspose_doc_exporter_options', 'aspose_doc_exporter_post_comments');
+    register_setting('aspose_doc_exporter_options', 'aspose_doc_exporter_file_type');
+
 
 }
 
